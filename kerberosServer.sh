@@ -17,7 +17,9 @@ sudo sed -i "s/^# \.example\.com = EXAMPLE\.COM/\.example\.com = ap-southeast-1\
 && sudo sed -i "s/^# example\.com = EXAMPLE\.COM/\example\.com = ap-southeast-1\.compute\.internal/" /etc/krb5.conf
 
 sudo sed -i "s/^# EXAMPLE\.COM/ ap-southeast-1\.compute\.internal/" /etc/krb5.conf \
+# Needs editing
 && sudo sed -i "s/^#  kdc = kerberos\.example\.com/kdc = ip-172-31-28-114\.ap-southeast-1\.compute\.internal/" /etc/krb5.conf \
+# Needs editing
 && sudo sed -i "s/^#  admin_server = kerberos\.example\.com/  admin_server = ip-172-31-28-114\.ap-southeast-1\.compute.internal/" /etc/krb5.conf \
 && sudo sed -i "s/^# }/ }/" /etc/krb5.conf
 
@@ -61,5 +63,7 @@ sudo chmod 766 krb5kdc.log
 echo "GO TO CLOUDERA MANAGER"
 
 # In Cloudera Manager:
-# Administration -> Settings -> Security ->Kerberos Security Realm -> PUNEETHA.COM
+# Administration -> Settings -> Security ->Kerberos Security Realm -> ap-southeast-1.compute.internal
 # Add this as the realm -> "ap-southeast-1.compute.internal"
+# KDC Server Host -> "IP address or Full Hostname" eg.ip-172-31-28-114.ap-southeast-1.compute.internal
+# KDC Admin Server Host -> "IP address or Full Hostname" eg.ip-172-31-28-114.ap-southeast-1.compute.internal
