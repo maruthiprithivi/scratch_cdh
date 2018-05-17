@@ -1,0 +1,98 @@
+stopHosts cdh1-1 && stopHosts cdh1-2 && stopHosts cdh1-3 && stopHosts cdh1-4 && stopHosts cdh1-5
+startHosts cdh1-1 && startHosts cdh1-2 && startHosts cdh1-3 && startHosts cdh1-4 && startHosts cdh1-5
+fixHosts cdh1-1 cdh11 && fixHosts cdh1-2 cdh12 && fixHosts cdh1-3 cdh13 && fixHosts cdh1-4 cdh14 && fixHosts cdh1-5 cdh15
+
+fixHosts cdh2-1 cdh21 && fixHosts cdh2-2 cdh22 && fixHosts cdh2-3 cdh23 && fixHosts cdh2-4 cdh24 && fixHosts cdh2-5 cdh25
+
+fixHosts cdh1 cdh1 && fixHosts cdh2 cdh2 && fixHosts cdh3 cdh3 && fixHosts cdh4 cdh4 && fixHosts cdh5 cdh5
+
+fixHosts cdh3-1 cdh31 && fixHosts cdh3-2 cdh32 && fixHosts cdh3-3 cdh33 && fixHosts cdh3-4 cdh34
+- AWS
+ - m4.xlarge
+ - 5 nodes
+ - 30GB Storage Minimum (Add Storage)
+
+ - Mount with no access time
+
+ - echo never >> /sys/kernel/mm/transparent_hugepage/defrag
+ - echo never >> /sys/kernel/mm/transparent_hugepage/enabled
+
+ - /usr/share/java <- this is where you need to place the mysql connector
+
+ - create database amon DEFAULT CHARACTER SET utf8;
+ - create database rman DEFAULT CHARACTER SET utf8;
+ - create database metastore DEFAULT CHARACTER SET utf8;
+ - create database sentry DEFAULT CHARACTER SET utf8;
+ - create database nav DEFAULT CHARACTER SET utf8;
+ - create database navms DEFAULT CHARACTER SET utf8;
+ - create database oozie DEFAULT CHARACTER SET utf8;
+ - create database hue DEFAULT CHARACTER SET utf8;
+
+ - grant all on amon.* TO 'amon'@'%' IDENTIFIED BY 'amon_password';
+ - grant all on rman.* TO 'rman'@'%' IDENTIFIED BY 'rman_password';
+ - grant all on metastore.* TO 'hive'@'%' IDENTIFIED BY 'hive_password';
+ - grant all on sentry.* TO 'sentry'@'%' IDENTIFIED BY 'sentry_password';
+ - grant all on nav.* TO 'nav'@'%' IDENTIFIED BY 'nav_password';
+ - grant all on navms.* TO 'navms'@'%' IDENTIFIED BY 'navms_password';
+ - grant all on oozie.* TO 'oozie'@'%' IDENTIFIED BY 'oozie_password';
+ - grant all on hue.* TO 'hue'@'%' IDENTIFIED BY 'hue_password';
+
+
+[ClouderaManager]
+name=CM Repository
+baseurl=http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/5.14.0/
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
+
+- sudo yum --disablerepo="*" --enablerepo="cloudera-manager" list available
+
+
+- ./scm_prepare_database.sh mysql -h localhost -u root -p cdh1234 -P 3306 scm scm scm
+
+
+13.229.247.6  ip-172-31-23-132.ap-southeast-1.compute.internal  ec2-13-229-247-6.ap-southeast-1.compute.amazonaws.com
+13.229.122.16  ip-172-31-31-148.ap-southeast-1.compute.internal  ec2-13-229-122-16.ap-southeast-1.compute.amazonaws.com
+52.221.207.60  ip-172-31-30-46.ap-southeast-1.compute.internal  ec2-52-221-207-60.ap-southeast-1.compute.amazonaws.com
+54.255.244.3  ip-172-31-17-204.ap-southeast-1.compute.internal  ec2-54-255-244-3.ap-southeast-1.compute.amazonaws.com
+
+172.31.23.132, 172.31.31.148, 172.31.30.46, 172.31.17.204
+
+
+
+- Replication
+- Run this on the master
+mysql -uroot -pcdh1234 -e "GRANT REPLICATION SLAVE ON *.* TO 'root'@'ip-172-31-28-1.ap-southeast-1.compute.internal' IDENTIFIED BY 'cdh1234';"
+mysql -uroot -pcdh1234 -e "GRANT REPLICATION SLAVE ON *.* TO 'root'@'172.31.19.97' IDENTIFIED BY 'cdh1234';"
+# revoke REPLICATION SLAVE ON *.* from 'root'@'ip-172-31-28-1.ap-southeast-1.compute.internal'; #
+mysql -uroot -pcdh1234 -e "SET GLOBAL binlog_format = 'ROW';"
+mysql -uroot -pcdh1234 -e "FLUSH TABLES WITH READ LOCK;"
+mysql -uroot -pcdh1234 -e "show master status;"
+mysql -uroot -pcdh1234 -e "UNLOCK TABLES;"
+
+- To slave
+mysql -uroot -pcdh1234 -e "CHANGE MASTER TO MASTER_HOST='ip-172-31-30-141.ap-southeast-1.compute.internal', MASTER_USER='root', MASTER_PASSWORD='cdh1234', MASTER_LOG_FILE='mysql_binary_log.000005', MASTER_LOG_POS=15285;"
+mysql -uroot -pcdh1234 -e "CHANGE MASTER TO MASTER_HOST='172.31.27.117', MASTER_USER='root', MASTER_PASSWORD='cdh1234', MASTER_LOG_FILE='mysql_binary_log.000003', MASTER_LOG_POS=43443006;"
+mysql -uroot -pcdh1234 -e "START SLAVE;"
+mysql -uroot -pcdh1234 -e "SHOW SLAVE STATUS \G;"
+
+sudo -u hdfs hdfs dfs -mkdir /tgen
+sudo -u hdfs hdfs dfs -chown jimenez /user/jimenez/tgen
+# Need to do some steps on CM to enable "acls.enable" under the HDFS->Configuration tab
+sudo -u hdfs hdfs dfs -setfacl -m default:user:beltran:rwx /user/beltran
+
+#HDFS Create Dir
+sudo -u hdfs hdfs dfs -mkdir /user/jimenez \
+&& sudo -u hdfs hdfs dfs -mkdir /user/beltran
+
+
+# Runnig Teragen
+sudo -u hdfs time hadoop jar /opt/cloudera/parcels/CDH-5.14.2-1.cdh5.14.2.p0.3/jars/hadoop-examples.jar teragen 5000000 /user/maruthiprithivi
+sudo -u hdfs time hadoop jar /opt/cloudera/parcels/CDH-5.13.3-1.cdh5.13.3.p0.2/jars/hadoop-examples.jar teragen -Ddfs.block.size=67108864 -Dmapreduce.map.memory.mb=512 -Dmapred.map.tasks=8 65536000 user/jimenez/tgen
+sudo -u hdfs time hadoop jar /opt/cloudera/parcels/CDH-5.14.2-1.cdh5.14.2.p0.3/jars/hadoop-examples.jar terasort /user/maruthiprithivi /user/maruthiprithivi_done
+
+6.4e+7
+
+# HA HDFS
+sudo mkdir -p /dfs/jn
+sudo chown hdfs /dfs/jn
