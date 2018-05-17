@@ -23,6 +23,14 @@ sudo wget http://archive.cloudera.com/director/redhat/7/x86_64/director/cloudera
 sudo sed -i "s/^baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2\/$/baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2.7.1\//" /etc/yum.repos.d/cloudera-director.repo
 sudo sed -i "s/^baseurl\=https:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5\/$/baseurl\=http:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5.13.3\//" /etc/yum.repos.d/cloudera-manager.repo
 
+sudo echo "# MariaDB 10.0 RedHat repository list - created 2018-05-17 22:55 UTC" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "# http://downloads.mariadb.org/mariadb/repositories/" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "[mariadb]" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "name = MariaDB" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "baseurl = http://yum.mariadb.org/10.0/rhel7-amd64" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB" >> /etc/yum.repos.d/mariadb.repo \
+&& sudo echo "gpgcheck=1" >> /etc/yum.repos.d/mariadb.repo
+
 sudo yum install oracle-j2sdk1.8 -y
 
 # sudo echo "export PATH=$PATH:/usr/java/jdk1.8.0_121-cloudera/bin/" >> /home/centos/.bashrc
@@ -38,8 +46,8 @@ sudo systemctl start ntpd
 sudo systemctl enable ntpd
 sudo echo "sudo systemctl start ntpd" >> /home/centos/.bashrc
 sudo echo "sudo systemctl enable ntpd" >> /home/centos/.bashrc
-sudo echo "sudo service mariadb start" >> /home/centos/.bashrc
-sudo yum install mariadb-server -y
+sudo echo "sudo service mariadb restart" >> /home/centos/.bashrc
+sudo yum install MariaDB-server MariaDB-client -y
 sudo service mariadb stop
 
 

@@ -5,6 +5,37 @@ fixHosts cdh1-1 cdh11 && fixHosts cdh1-2 cdh12 && fixHosts cdh1-3 cdh13 && fixHo
 fixHosts cdh2-1 cdh21 && fixHosts cdh2-2 cdh22 && fixHosts cdh2-3 cdh23 && fixHosts cdh2-4 cdh24 && fixHosts cdh2-5 cdh25
 
 fixHosts cdh1 cdh1 && fixHosts cdh2 cdh2 && fixHosts cdh3 cdh3 && fixHosts cdh4 cdh4 && fixHosts cdh5 cdh5
+fixHosts c1 c1 && fixHosts c2 c2 && fixHosts c3 c3 && fixHosts c4 c4 && fixHosts c5 c5
+
+scp /Users/maruthi/learning/cloudera/cmNode1.sh centos@c1:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/cmNode2.sh centos@c1:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/nonCmNode1.sh centos@c1:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosServer.sh centos@c1:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosClient.sh centos@c1:/home/centos/
+
+scp /Users/maruthi/learning/cloudera/cmNode1.sh centos@c2:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/cmNode2.sh centos@c2:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/nonCmNode1.sh centos@c2:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosServer.sh centos@c2:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosClient.sh centos@c2:/home/centos/
+
+scp /Users/maruthi/learning/cloudera/cmNode1.sh centos@c3:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/cmNode2.sh centos@c3:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/nonCmNode1.sh centos@c3:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosServer.sh centos@c3:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosClient.sh centos@c3:/home/centos/
+
+scp /Users/maruthi/learning/cloudera/cmNode1.sh centos@c4:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/cmNode2.sh centos@c4:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/nonCmNode1.sh centos@c4:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosServer.sh centos@c4:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosClient.sh centos@c4:/home/centos/
+
+scp /Users/maruthi/learning/cloudera/cmNode1.sh centos@c5:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/cmNode2.sh centos@c5:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/nonCmNode1.sh centos@c5:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosServer.sh centos@c5:/home/centos/ \
+&& scp /Users/maruthi/learning/cloudera/kerberosClient.sh centos@c5:/home/centos/
 
 fixHosts cdh3-1 cdh31 && fixHosts cdh3-2 cdh32 && fixHosts cdh3-3 cdh33 && fixHosts cdh3-4 cdh34
 - AWS
