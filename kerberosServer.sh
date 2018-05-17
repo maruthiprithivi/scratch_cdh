@@ -29,5 +29,37 @@ sudo /usr/sbin/kdb5_util create -s
 sudo kadmin.local
 # This is what i'm adding -> "addprinc cloudera-scm@ap-southeast-1.compute.internal" | password -> "cdh1234" | to exit -> "q"
 
-sudo echo "*/admin@ap-southeast-1.compute.internal	*" > /var/kerberos/krb5kdc/kadm5.acl
+# check this file to make sure that there is a space between the last "*" and the last word of the realm
+sudo echo "*/admin@ap-southeast-1.compute.internal *" > /var/kerberos/krb5kdc/kadm5.acl
 sudo echo "cloudera-scm@ap-southeast-1.compute.internal admilc" >> /var/kerberos/krb5kdc/kadm5.acl
+
+#Interactive
+sudo kadmin.local
+# Do the following
+# kadmin.local:  addpol admin
+# kadmin.local:  addpol users
+# kadmin.local:  addpol hosts
+# kadmin.local:  xst -k cmf.keytab cloudera-scm@ap-southeast-1.compute.internal
+# kadmin.local:  q
+
+sudo mv cmf.keytab /etc/cloudera-scm-server/
+sudo chown cloudera-scm:cloudera-scm /etc/cloudera-scm-server/cmf.keytab
+sudo chmod 600 /etc/cloudera-scm-server/cmf.keytab
+
+
+#vim /etc/cloudera-scm-server/cmf.principal
+sudo echo "cloudera-scm@ap-southeast-1.compute.internal" > /etc/cloudera-scm-server/cmf.principal
+sudo chown cloudera-scm:cloudera-scm /etc/cloudera-scm-server/cmf.principal
+sudo chmod 600 /etc/cloudera-scm-server/cmf.principal
+
+sudo service krb5kdc start
+sudo service kadmin start
+
+sudo chmod 766 kadmind.log
+sudo chmod 766 krb5kdc.log
+
+echo "GO TO CLOUDERA MANAGER"
+
+# In Cloudera Manager:
+# Administration -> Settings -> Security ->Kerberos Security Realm -> PUNEETHA.COM
+# Add this as the realm -> "ap-southeast-1.compute.internal"
