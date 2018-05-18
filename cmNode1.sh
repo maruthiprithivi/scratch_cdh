@@ -23,14 +23,16 @@ sudo wget http://archive.cloudera.com/director/redhat/7/x86_64/director/cloudera
 sudo sed -i "s/^baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2\/$/baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2.7.1\//" /etc/yum.repos.d/cloudera-director.repo
 sudo sed -i "s/^baseurl\=https:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5\/$/baseurl\=http:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5.13.3\//" /etc/yum.repos.d/cloudera-manager.repo
 
-sudo echo "# MariaDB 10.0 RedHat repository list - created 2018-05-17 22:55 UTC" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "# http://downloads.mariadb.org/mariadb/repositories/" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "[mariadb]" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "name = MariaDB" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "baseurl = http://yum.mariadb.org/10.0/rhel7-amd64" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB" >> /etc/yum.repos.d/mariadb.repo \
-&& sudo echo "gpgcheck=1" >> /etc/yum.repos.d/mariadb.repo
+#MariaDB Repo
+# sudo echo "# MariaDB 10.0 RedHat repository list - created 2018-05-17 22:55 UTC" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "# http://downloads.mariadb.org/mariadb/repositories/" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "[mariadb]" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "name = MariaDB" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "baseurl = http://yum.mariadb.org/10.0/rhel7-amd64" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB" >> /etc/yum.repos.d/mariadb.repo \
+# && sudo echo "gpgcheck=1" >> /etc/yum.repos.d/mariadb.repo
 
+sudo yum clean all
 sudo yum install oracle-j2sdk1.8 -y
 
 # sudo echo "export PATH=$PATH:/usr/java/jdk1.8.0_121-cloudera/bin/" >> /home/centos/.bashrc
@@ -47,7 +49,10 @@ sudo systemctl enable ntpd
 sudo echo "sudo systemctl start ntpd" >> /home/centos/.bashrc
 sudo echo "sudo systemctl enable ntpd" >> /home/centos/.bashrc
 sudo echo "sudo service mariadb restart" >> /home/centos/.bashrc
-sudo yum install MariaDB-server MariaDB-client -y
+# To install from MariaDB Repo
+# sudo yum install MariaDB-server -y
+# To install from centos base
+sudo yum install mariadb -y
 sudo service mariadb stop
 
 
@@ -102,10 +107,10 @@ sudo echo "[mysqld]" > /etc/my.cnf \
 && sudo echo "replicate-ignore-db=information_schema" >> /etc/my.cnf \
 && sudo echo "replicate-ignore-db=performance_schema" >> /etc/my.cnf
 
-sudo echo "<property>" \ >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
-&& sudo echo "  <name>dfs.permissions.superusergroup</name>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
-&& sudo echo "  <value>test</value>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
-&& sudo echo "</property>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml
+# sudo echo "<property>" \ >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
+# && sudo echo "  <name>dfs.permissions.superusergroup</name>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
+# && sudo echo "  <value>test</value>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml \
+# && sudo echo "</property>" >> /etc/hadoop/conf.cloudera.hdfs/core-site.xml
 
 sudo service mariadb start
 # This will be an interactive passwprd setup
