@@ -21,7 +21,7 @@ cd /etc/yum.repos.d/
 sudo wget http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo
 sudo wget http://archive.cloudera.com/director/redhat/7/x86_64/director/cloudera-director.repo
 sudo sed -i "s/^baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2\/$/baseurl\=http:\/\/archive\.cloudera\.com\/director\/redhat\/7\/x86_64\/director\/2.7.1\//" /etc/yum.repos.d/cloudera-director.repo
-sudo sed -i "s/^baseurl\=https:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5\/$/baseurl\=http:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5.13.3\//" /etc/yum.repos.d/cloudera-manager.repo
+sudo sed -i "s/^baseurl\=https:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5\/$/baseurl\=http:\/\/archive\.cloudera\.com\/cm5\/redhat\/7\/x86_64\/cm\/5.11.2\//" /etc/yum.repos.d/cloudera-manager.repo
 
 #MariaDB Repo
 # sudo echo "# MariaDB 10.0 RedHat repository list - created 2018-05-17 22:55 UTC" >> /etc/yum.repos.d/mariadb.repo \
