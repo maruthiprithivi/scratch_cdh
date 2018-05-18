@@ -52,7 +52,7 @@ sudo echo "sudo service mariadb restart" >> /home/centos/.bashrc
 # To install from MariaDB Repo
 # sudo yum install MariaDB-server -y
 # To install from centos base
-sudo yum install mariadb -y
+sudo yum install mariadb-server -y
 sudo service mariadb stop
 
 
